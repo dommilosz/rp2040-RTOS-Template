@@ -7,62 +7,49 @@
 #include "FreeRTOSConfig.h"
 #include "task.h"
 
-#define LED_PIN 25
-#define RED_LED 0
-
-#define GPIO_ON     1
-#define GPIO_OFF    0
-
-void GreenLEDTask(void *param)
+void Serial500(void *param)
 {
-    gpio_put(LED_PIN, GPIO_ON);
-    vTaskDelay(1000);
-    gpio_put(LED_PIN, GPIO_OFF);
-    vTaskDelay(1000);
+    while (true)
+    {
+        printf("500");
+        vTaskDelay(500);
+    }
 }
 
-void RedLEDTask(void *param)
+void Serial1500(void *param)
 {
-    gpio_put(RED_LED, GPIO_ON);
-    vTaskDelay(100);
-    gpio_put(RED_LED, GPIO_OFF);
-    vTaskDelay(100);
+    while (true)
+    {
+        printf("1500");
+        vTaskDelay(1500);
+    }
 }
 
-int main() 
+
+int main()
 {
     stdio_init_all();
 
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
-
-    gpio_init(RED_LED);
-    gpio_set_dir(RED_LED, GPIO_OUT);
-
-    TaskHandle_t gLEDtask = NULL;
-    TaskHandle_t rLEDtask = NULL;
-
     uint32_t status = xTaskCreate(
-                    GreenLEDTask,
-                    "Green LED",
-                    1024,
-                    NULL,
-                    tskIDLE_PRIORITY,
-                    &gLEDtask);
+        Serial500,
+        "500",
+        1024,
+        NULL,
+        tskIDLE_PRIORITY,
+        NULL);
 
-    // status = xTaskCreate(
-    //                 RedLEDTask,
-    //                 "Red LED",
-    //                 1024,
-    //                 NULL,
-    //                 1,
-    //                 &rLEDtask);
+    status = xTaskCreate(
+        Serial1500,
+        "1500",
+        1024,
+        NULL,
+        1,
+        NULL);
 
     vTaskStartScheduler();
 
-    for( ;; )
+    for (;;)
     {
         //should never get here
     }
-
 }
